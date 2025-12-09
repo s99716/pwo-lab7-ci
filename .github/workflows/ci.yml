@@ -15,22 +15,32 @@ jobs:
       - run: dotnet build
       - run: dotnet test
 
-      - run: dotnet publish -o app -r linux-x64 --sc /p:PublishSingleFile=true,AssemblyName=app
+      - name: Publish app (linux-x64)
+        run: dotnet publish -o app -r linux-x64 --sc /p:PublishSingleFile=true,AssemblyName=app
 
-      - run: tar cf app.tar app/
+      - name: Create tar archive
+        run: tar cf app.tar app/
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: app.tar
-          path: app.tar
+          name: app           
+          path: app.tar       
 
   test:
     runs-on: ubuntu-latest
+    needs: build             
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         with:
-          name: app.tar
+          name: app          
 
-      - run: tar xf app.tar
+      - name: Debug – pokaż pliki
+        run: ls -R
 
-      - run: ./app/app
+      - name: Extract archive
+        run: tar xf app.tar
+
+      - name: Run app
+        run: ./app/app
