@@ -31,6 +31,6 @@ jobs:
         with:
           name: app.tar
 
-      - run: tar xf app.tar/app.tar
+      - run: tar xf app.tar
 
       - run: ./app/app
